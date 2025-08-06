@@ -15,7 +15,6 @@ RANKS_TO_NUMBER = {"2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 
 class CardWidget(Widget):
     def __init__(self, card, name, group, **kwargs):
         super().__init__(**kwargs)
-        print(**kwargs)
         if card is None:
             filename = "png/blue.png"
         else:
@@ -47,7 +46,6 @@ class CardWidget(Widget):
 
     def on_parent_resize(self, instance, value):
         # Update size and position based on parent size
-        print(f"Parent resized: {instance.size}")
         self.calculate_initial_pos_size_cards()
         self.update_graphics()
 
@@ -85,21 +83,10 @@ class CardWidget(Widget):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-#            print(f"Card {self.card.rank} of {self.card.suit} clicked")
-            if hasattr(self.parent.controller, 'on_card_clicked') and self.name == "Player1":
-               print(f"Card {self.card.rank} of {self.card.suit} clicked")
-               self.parent.controller.on_card_clicked(self)
-               return True
+            if self.name == "Player1":
+                if hasattr(self.parent.controller, 'on_card_clicked') and (self.parent.controller.click_flag):
+                    self.parent.controller.on_card_clicked(self)
+                return True
         return super().on_touch_down(touch)
-    
 
-
-#        if self.parent:
-#            self.parent.remove_widget(self)  # Remove from parent layout
-
-    # def move_to_floor(self, floor_pos):
-    #     print(f"Moving card to floor at position: {floor_pos}")
-    #     anim = Animation(pos=floor_pos, duration=0.5)
-    #     anim.bind(on_complete=lambda *args: print("Animation complete!"))
-    #     anim.start(self)
 

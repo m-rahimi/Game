@@ -23,6 +23,6 @@ class PlayerWidget(Widget):
                 self.remove_widget(child)
                 break
 
-    def on_card_clicked(self, card_widget):
-        print(f"Card clicked: {card_widget.card}")
-        self.controller.on_card_clicked(card_widget)  # Notify controller about the card click
+    # def on_card_clicked(self, card_widget):
+    #     print(f"Card clicked: {card_widget.card}")
+    #     self.controller.on_card_clicked(card_widget)  # Notify controller about the card click

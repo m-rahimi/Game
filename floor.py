@@ -12,9 +12,10 @@ class Floor:
             self.hand.remove(card)
             return 
         
-    def find_winning_cards(self, card):
+    def find_winning_cards(self, card): 
         win_cards = []
         win_scores = []
+        soor = False
 
         if card.rank == 'jack':
             combo_cards = [c for c in self.hand if c.value < 12]
@@ -34,11 +35,20 @@ class Floor:
                     if sum(combo_values) + card.value == 11:
                         win_cards.append(list(combo_cards) + [card])
 
+        value_cards = [c for c in self.hand if c.value <= 10]
+        if card.rank == 'jack' and len(value_cards) == 0: #single jack is not a winning card
+            win_cards = []
+
         if win_cards:
             for cards in win_cards:
                 scores = sum(c.score for c in cards)
                 clubs = sum(0.2 for c in cards if c.suit == 'clubs')
                 win_scores.append(scores + clubs)
 
-        return win_cards, win_scores
+        if card.rank != 'jack' and len(win_cards) == 1 and len(win_cards[0]) == len(self.hand) + 1: #SOOOR
+            print("SOOOR")
+            win_scores[0] += 10 # Add 10 points for a single winning card
+            soor = True
+
+        return win_cards, win_scores, soor
 

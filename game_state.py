@@ -17,7 +17,7 @@ class GameState:
         # Clear hands
         for player in self.players:
             for i in range(6):
-                for j in range(4):
+                for j in range(1): # Assuming each player gets 1 card per group
                     if deck:
                         rank, suit = deck.pop()
                         card = Card(rank, suit)
