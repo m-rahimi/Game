@@ -2,6 +2,7 @@ from kivy.animation import Animation
 from card_widget import CardWidget
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.app import App
 import copy
 import random
 
@@ -36,7 +37,7 @@ class GameController:
             # find winning cards
             self.win_cards, self.win_scores, self.soor = self.game_state.floor.find_winning_cards(card)
             self.game_state.floor.add_card(card)  # Add card to the floor
-            if len(self.win_scores)>0: #self.soor:
+            if self.soor:
                 self.player1_soor += 1
                 print(f"Player 1 SOOOR count: {self.player1_soor}")
                 self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
@@ -147,7 +148,7 @@ class GameController:
         card = self.game_state.players[1].hand[best_move].pop(0)  # Remove the card from player's hand
         self.win_cards, self.win_scores, self.soor = self.game_state.floor.find_winning_cards(card)
         self.game_state.floor.add_card(card)  # Add card to the floor
-        if len(self.win_scores)>0: #self.soor:
+        if self.soor:
             self.player2_soor += 1
             print(f"Player 2 SOOOR count: {self.player2_soor}")
             self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
@@ -267,19 +268,30 @@ class GameController:
     def start_new_game(self):
         print("Starting new game")
 
-        self.win_cards, self.win_scores = [], []
-        self.win_n = 0
-        self.click_flag = True  # Prevent multiple clicks
-        self.card_played1_group = None
-        self.card_played2_group = None
-        self.computer_flag = False
-        self.last_winner = None  # Track the last winner
-        self.soor = False  # Track if a SOOOR has occurred
+        wining_score = 10
+        if self.game_board.player1_score >= wining_score or self.game_board.player2_score >= wining_score:
+            print("Game over, resetting scores")
+            app = App.get_running_app()
+            app.end_game()
+            self.game_board.player1_score = 0
+            self.game_board.player2_score = 0
+        else:
+            self.win_cards, self.win_scores = [], []
+            self.win_n = 0
+            self.click_flag = True  # Prevent multiple clicks
+            self.card_played1_group = None
+            self.card_played2_group = None
+            self.computer_flag = False
+            self.last_winner = None  # Track the last winner
+            self.soor = False  # Track if a SOOOR has occurred
+            self.player1_soor = 0
+            self.player2_soor = 0
 
-        self.game_board.difficulty_selection.player_start = not self.game_board.difficulty_selection.player_start
 
-        self.game_state.setup()
-        self.game_board.initialize_game_board()    
+            self.game_board.difficulty_selection.player_start = not self.game_board.difficulty_selection.player_start
+
+            self.game_state.setup()
+            self.game_board.initialize_game_board()    
 
 
 def print_hierarchy(widget, level=0):

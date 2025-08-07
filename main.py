@@ -55,12 +55,12 @@ class GameBoard(FloatLayout):
         self.show_soor = ShowSoor(0, 0)
         self.background.add_widget(self.show_soor)
 
-        self.initialize_game_board()
-        # self.deal_cards = deal_cards(self.controller.game_state.players[0], self.controller.game_state.players[1], self.controller.game_state.floor, self.initialize_game_board)
-        # self.background.add_widget(self.deal_cards)
+#        self.initialize_game_board()
+        self.deal_cards = deal_cards(self.controller.game_state.players[0], self.controller.game_state.players[1], self.controller.game_state.floor, self.initialize_game_board)
+        self.background.add_widget(self.deal_cards)
 
     def initialize_game_board(self):
-        # self.background.remove_widget(self.deal_cards)
+        self.background.remove_widget(self.deal_cards)
 
         self.player1_widget = PlayerWidget(self.controller.game_state.players[0], 'Player1', self.controller)
         self.player2_widget = PlayerWidget(self.controller.game_state.players[1], 'Computer', self.controller)
@@ -101,25 +101,11 @@ class CardGameApp(App):
         # print_hierarchy(game_board)
 
         return self.game_board
+    
+    def end_game(self):
+        """End the game when the button is pressed."""
+        print("Game Over!")
+        self.stop()  # Stop the Kivy application
 
 if __name__ == '__main__':
     CardGameApp().run()
-
-    # def on_touch_down(self, touch):
-    #     """Handle mouse click events."""
-    #     if not self.difficulty_selection.difficulty or self.difficulty_selection.difficulty == "Not Selected":
-    #       print(f"Mouse clicked at: {touch.pos}")
-    #       print(self.difficulty_selection.difficulty)
-    #       Clock.schedule_once(self.background.set_green_background, 1)
-    #       return super().on_touch_down(touch)
-          
-
-    # def on_touch_up(self, touch):
-    #     if not self.difficulty_selection.difficulty or self.difficulty_selection.difficulty != "Not Selected":
-    #       print(f"Mouse released at: {touch.pos}")
-    #       print(self.difficulty_selection.difficulty)
-    #     # self.mat2 = MatWidget(name='Mat2')
-    #     # # self.mat1 = MatWidget(name='Mat1')
-    #     # self.background.add_widget(self.mat2)
-    #     # # self.add_widget(self.mat1)
-    #     return super().on_touch_up(touch)

@@ -20,7 +20,7 @@ class DifficultySelection(FloatLayout):
             orientation='vertical',
             spacing=10,
             size_hint=(0.5, 0.35),  # Smaller centered window
-            pos_hint={'center_x': 0.5, 'center_y': 0.5},
+            pos_hint={'center_x': 0.5, 'center_y': 0.45 },
             padding=20,
         )
         
@@ -58,8 +58,9 @@ class DifficultySelection(FloatLayout):
 
             self.selection_label = Label(text=text,
                                     font_size=50,
-                                    color=(0, 0, 0, 1),
 #                                    size_hint=(0.5, 0.5),
-                                    pos_hint={'center_x': 0.5, 'center_y': 0.7})
+                                    pos_hint={'center_x': 0.5, 'center_y': 0.65},
+                                    color=(1, 1, 1, 1),
+                                    font_name="Roboto-Bold.ttf")
             self.layout.add_widget(self.selection_label)
             Clock.schedule_once(lambda dt: self.callback(), 1)
