@@ -2,6 +2,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.uix.image import Image
+from kivy.graphics import Color, Rectangle, Line
 
 ratio = 323 / 222
 
@@ -11,12 +12,44 @@ class ShowScores(Widget):
         self.initial_pos()
         self.score1 = str(score1).zfill(2)
         self.score2 = str(score2).zfill(2)
-        self.label1 = Label(text=self.score1, font_size='48sp', pos=self.score1_pos, size_hint=(None, None), size=self.score_size, halign='center', valign="middle", color=(0, 0, 1, 1),font_name="Roboto-Bold.ttf")
-        self.label2 = Label(text=self.score2, font_size='48sp', pos=self.score2_pos, size_hint=(None, None), size=self.score_size, halign='center', valign="middle", color=(0, 0, 1, 1),font_name="Roboto-Bold.ttf")
+
+        # Create labels with initial font size
+        self.label1 = Label(
+            text=self.score1,
+            font_size=self.calculate_font_size(self.score_size[1]),  # Calculate font size
+            pos=self.score1_pos,
+            size_hint=(None, None),
+            size=self.score_size,
+            halign='center',
+            valign="middle",
+            color=(0, 0, 1, 1),
+            font_name="Roboto-Bold.ttf"
+        )
+        self.label2 = Label(
+            text=self.score2,
+            font_size=self.calculate_font_size(self.score_size[1]),  # Calculate font size
+            pos=self.score2_pos,
+            size_hint=(None, None),
+            size=self.score_size,
+            halign='center',
+            valign="middle",
+            color=(0, 0, 1, 1),
+            font_name="Roboto-Bold.ttf"
+        )
+
+        with self.canvas:
+            Color(1, 1, 1, 1)
+            self.rect1 = Rectangle(pos=self.score1_pos, size=self.score_size)
+            self.rect2 = Rectangle(pos=self.score2_pos, size=self.score_size)
+
         self.add_widget(self.label1)
         self.add_widget(self.label2)
 
         Window.bind(size=self.on_window_resize)
+
+    def calculate_font_size(self, label_height):
+        """Calculate font size based on the height of the label."""
+        return label_height * 1.  # Set font size to 70% of the label height
 
     def initial_pos(self):
         width = Window.width * 0.12
@@ -28,8 +61,8 @@ class ShowScores(Widget):
         rect_y1 = self.y + (Window.height * 0.15)
         rect_y2 = self.y + (Window.height - rect_y1 - height)
 
-        self.score1_pos = (rect_x, rect_y1 - height/4 - height/10)
-        self.score2_pos = (rect_x, rect_y2 + height + height/10)
+        self.score1_pos = (rect_x, rect_y1 - height / 4 - height / 10)
+        self.score2_pos = (rect_x, rect_y2 + height + height / 10)
         self.score_size = (int(width), int(height / 4))
 
     def on_window_resize(self, *args):
@@ -39,6 +72,16 @@ class ShowScores(Widget):
         self.label2.pos = self.score2_pos
         self.label1.size = self.score_size
         self.label2.size = self.score_size
+
+        self.rect1.pos = self.score1_pos
+        self.rect1.size = self.score_size
+
+        self.rect2.pos = self.score2_pos
+        self.rect2.size = self.score_size
+
+        # Update font size dynamically based on the new label height
+        self.label1.font_size = self.calculate_font_size(self.score_size[1])
+        self.label2.font_size = self.calculate_font_size(self.score_size[1])
 
     def update_text_size(self, *args):
         """Ensure the text is centered within the label."""

@@ -42,7 +42,14 @@ class DifficultySelection(FloatLayout):
     def difficulty_selected(self, instance):
         if self.difficulty == "Not Selected":
             self.difficulty = instance.text
-
+            self.max_depth = 0
+            if self.difficulty == "Easy":
+                self.max_depth = 2
+            elif self.difficulty == "Medium":
+                self.max_depth = 4
+            elif self.difficulty == "Hard":
+                self.max_depth = 6
+                
             for key in self.button_box.children:
                 if key != instance:
                     key.background_color[3] = key.background_color[3] - 0.2  # Dim the other buttons

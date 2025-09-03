@@ -26,7 +26,6 @@ class MatWidget(Widget):
         with self.canvas:
             Color(79/255, 108/255, 36/255, 1)
             self.rect = Rectangle(pos=self.pos, size=self.size)
-
         # Bind to window size changes
         Window.bind(size=self.on_window_resize)
 
@@ -73,12 +72,15 @@ class MatWidget(Widget):
         if self.name == "Mat1":
             self.rect.size = (width, height)
             self.rect.pos = (rect_x, rect_y1)
-            print(f"Mat1 resized: {self.rect.size}, pos: {self.rect.pos}")
+            self.size = (width, height)  # Update the widget's size
+            self.pos = (rect_x, rect_y1)  # Update the widget's position    
         # mat2
         elif self.name == "Mat2":
             self.rect.size = (width, height)
             self.rect.pos = (rect_x, rect_y2)
-
+            self.size = (width, height)  # Update the widget's size
+            self.pos = (rect_x, rect_y2)  # Update the widget's position
+            
         width = Window.width * 0.1
         height = width * ratio
         if height > Window.height * 0.25:

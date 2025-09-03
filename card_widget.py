@@ -84,6 +84,7 @@ class CardWidget(Widget):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             if self.name == "Player1":
+#                print(f"Card {self.card.rank} of {self.card.suit} clicked in group {self.group}")
                 if hasattr(self.parent.controller, 'on_card_clicked') and (self.parent.controller.click_flag):
                     self.parent.controller.on_card_clicked(self)
                 return True

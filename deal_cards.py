@@ -57,13 +57,13 @@ class deal_cards(Widget):
         card_widget = CardWidget(card, name=self.name, group=self.group)
 
         self.add_widget(card_widget_b)
-        anim = Animation(pos=card_widget.pos, duration=self.sound.length)
+        anim = Animation(pos=card_widget.pos, duration=0.1) #self.sound.length)
         anim.bind(on_complete=lambda *args: self.add_widget(card_widget))
         if self.name != "Floor":
             anim.bind(on_complete=lambda *args: self.deal_players_cards())
         else:
             anim.bind(on_complete=lambda *args: self.deal_floor_cards())
         anim.start(card_widget_b)
-        self.sound.play()
+#        self.sound.play()
 
 

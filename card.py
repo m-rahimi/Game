@@ -17,3 +17,4 @@ class Card:
         self.suit = suit
         self.score = find_score(rank, suit)
         self.value = RANKS_TO_NUMBER.get(rank, 11)
+        self.prob = 1

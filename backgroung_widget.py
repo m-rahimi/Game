@@ -1,47 +1,40 @@
-from kivy.uix.widget import Widget
-from kivy.graphics import Color, Rectangle, Line
-from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
+from kivy.graphics import Color, Rectangle
 
-class BackgroundImage(FloatLayout):
-    def __init__(self, **kwargs):
-        super(BackgroundImage, self).__init__(**kwargs)
-        self.rect = None
-        self.set_background_image()
-        
-    def set_background_image(self, source='card_background.png'):
-        self.canvas.before.clear()
-        with self.canvas.before:
-            self.rect = Rectangle(source=source, 
-                                 size=self.size, 
-                                 pos=self.pos)
-        self.bind(size=self._update_rect, pos=self._update_rect)
-    
-    def set_green_background(self):
-        self.canvas.before.clear()
-        with self.canvas.before:
-            Color(25/255, 124/255, 84/255, 1)  # Green color
-            self.rect = Rectangle(size=self.size, 
-                                pos=self.pos)
-        self.bind(size=self._update_rect, pos=self._update_rect)
-    
-    def _update_rect(self, instance, value):
-        if self.rect:
-            self.rect.pos = instance.pos
-            self.rect.size = instance.size
-
-class Background(Widget):
-
+class Background(FloatLayout):
     def __init__(self, **kwargs):
         super(Background, self).__init__(**kwargs)
 
-        with self.canvas:
+        # First: draw the solid background color in canvas.before
+        with self.canvas.before:
             Color(25/255, 124/255, 84/255, 1)  # Green color
-            self.bg = Rectangle(size=self.bg_size, pos=self.bg_pos)
+            self.background = Rectangle(size=self.size, pos=self.pos)
+        
+        # Second: draw the image in the regular canvas (on top of background)
+        with self.canvas:
+            # Make sure to set color to white (no tint) before drawing image
+            Color(1, 1, 1, 1)  # White color (no tinting)
+            self.image = Rectangle(source='card_background.png', size=self.size, pos=self.pos)
 
+        # Bind both to update with layout changes
         self.bind(size=self._update_rect, pos=self._update_rect)
-        # Clock.schedule_once(lambda dt: self._update_rect())
 
-    def _update_rect(self, *args):
-        self.bg.pos = self.bg_pos
-        self.bg.size = self.bg_size
+    def _update_rect(self, instance, value):
+        """Update both background and image size and position."""
+        self.background.size = instance.size
+        self.background.pos = instance.pos
+        self.image.size = instance.size
+        self.image.pos = instance.pos
+
+    def remove_image(self):
+        """Remove the image from the canvas."""
+        self.canvas.remove(self.image)
+        print("Image removed after 10 seconds.")
+
+#     def on_touch_down(self, touch):
+#         """Handle clicks on the background."""
+#         # Check if the touch is inside the layout
+#         if self.collide_point(*touch.pos):
+#             print(f"Background clicked at: {touch.pos}")
+# #            return True  # Consume the touch event
+#         return super().on_touch_down(touch)

@@ -5,6 +5,7 @@ from kivy.core.window import Window
 from kivy.app import App
 import copy
 import random
+import itertools
 
 class GameController:
     def __init__(self, game_state, game_board):
@@ -23,7 +24,9 @@ class GameController:
 
     def on_card_clicked(self, card_widget):
         """Handle card click event for Player 1"""
+        print(self.click_flag, self.computer_flag)
         if self.click_flag and self.computer_flag is False:
+#            print("Player 1 clicked a card")
             self.click_flag = False  # Prevent further clicks until the current action is complete
             self.card_played1_group = copy.deepcopy(card_widget.group)
             self.game_board.player1_widget.remove_widget(card_widget)
@@ -62,21 +65,16 @@ class GameController:
             card_widget = CardWidget(card, name="Player1", group=group)
             self.game_board.player1_widget.add_widget(card_widget)
 
+
         self.click_flag = True  # Allow further clicks after the action is complete
         self.card_played1_group = None  # Reset the group after use
         self.win_cards, self.win_scores = [], []
         self.win_n = 0
 
-        if self.soor:
-            print("SOOOR occurred")
-            # self.game_board.show_soor.update_scores(self.game_state.players[0].score, self.game_state.players[1].score)
-            # self.soor = False
-
         if len(self.game_board.player2_widget.children) > 0:
             self.computer_move()
         else:
-            print("No cards left for Player 1, waiting for next round")
-            print(self.last_winner)
+#            print("No cards left for Player 1, waiting for next round")
             Clock.schedule_once(lambda dt: self.finish_game(), 1)
 
     def show_winning_cards(self, card_widget):
@@ -136,13 +134,14 @@ class GameController:
                     anim.start(child)
 
     def computer_move(self):
-        """Handle computer's move"""
-        
+        """Handle computer's move"""  
+        best_move, best_winning = self.find_best_move()
+
         self.computer_flag = True
-        while True:
-            best_move = random.randint(0,5)
-            if len(self.game_state.players[1].hand[best_move]) > 0:
-                break
+        # while True:
+        #     best_move = random.randint(0,5)
+        #     if len(self.game_state.players[1].hand[best_move]) > 0:
+        #         break
         self.card_played2_group = best_move
 
         card = self.game_state.players[1].hand[best_move].pop(0)  # Remove the card from player's hand
@@ -153,6 +152,22 @@ class GameController:
             print(f"Player 2 SOOOR count: {self.player2_soor}")
             self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
 
+        # select the winning card with best
+        if len(self.win_cards) > 1:
+            print(self.win_cards)
+            print(best_winning)
+            for cards in self.win_cards:
+                match = []
+                if len(cards) == len(best_winning):
+                    for c1 in cards:
+                        for c2 in best_winning:
+                            if c1.rank == c2.rank and c1.suit == c2.suit:
+                                match.append(True)
+                                break
+                    if len(match) == len(best_winning):
+                        self.win_cards = [cards]
+                        break
+
         for idx, child in enumerate(self.game_board.player2_widget.children):
             if isinstance(child, CardWidget) and child.card == card:
                 self.game_board.player2_widget.remove_widget(child)
@@ -160,19 +175,195 @@ class GameController:
                 child.name = 'Floor'
                 card_widget = child
                 break
-
+ 
         # remove empty card widget from player2
-        for card_none in self.game_board.player2_widget.children:
-            if isinstance(card_none, CardWidget) and card_none.card is None and card_none.group == best_move:
-                self.game_board.player2_widget.remove_widget(card_none)
-                break
+        if len(self.game_state.players[1].hand[best_move])==0:
+            for card_none in self.game_board.player2_widget.children:
+                if isinstance(card_none, CardWidget) and card_none.card is None and card_none.group == best_move:
+                    self.game_board.player2_widget.remove_widget(card_none)
+                    break
 
         if self.win_cards:
             self.game_board.floor_widget.rearrange_card_widgets(card_widget, callback=self.show_winning_cards)
         else:
             self.game_board.floor_widget.rearrange_card_widgets(card_widget, callback=self.flip_card_player2)
             self.computer_flag = False
-        
+
+    def find_best_move(self):
+        player1 = []
+        player2 = []
+        floor = [copy.deepcopy(c) for c in self.game_state.floor.hand]
+        player1_unplayed = [0 for _ in range(6)]
+        player2_unplayed = [0 for _ in range(6)]
+        unplayed_cards = []
+
+        for ig, group in enumerate(self.game_state.players[0].hand):
+            if group:
+                for id, card in enumerate(group):
+                    if id==0:
+                        player1.append(copy.deepcopy(card))
+                    if id > 0:
+                        unplayed_cards.append(copy.deepcopy(card))
+                        player1_unplayed[ig] = id
+            else:
+                player1.append(None)
+                player1_unplayed[ig] = 0
+
+        for ig, group in enumerate(self.game_state.players[1].hand):
+            if group:
+                for id, card in enumerate(group):
+                    if id==0:
+                        player2.append(copy.deepcopy(card))
+                if id > 0:
+                    unplayed_cards.append(copy.deepcopy(card))
+                    player2_unplayed[ig] = id
+            else:
+                player2.append(None)
+                player2_unplayed[ig] = 0
+
+        max_depth = self.game_board.difficulty_selection.max_depth
+        best, best_moves, best_winning = self.min_max(player1, player1_unplayed, player2, player2_unplayed, floor, unplayed_cards, player=2, depth=0, max_depth=max_depth, score1=0, score2=0)
+        rnd = random.randint(0, len(best_moves) - 1)
+        print(f"Best moves for computer: {best_moves} and selected move: {best_moves[rnd]}")
+        return best_moves[rnd], best_winning[rnd]
+
+    def min_max(self, player1, player1_unplayed, player2, player2_unplayed, floor, unplayed_cards, player, depth, max_depth, score1, score2):
+        if depth == max_depth or (player==1 and all(card is None for card in player1)) or (player==2 and all(card is None for card in player2)):
+#            print(f"Evaluating: score1={score1}, score2={score2}")
+            return score2 - score1  # The evaluation function
+
+        if player == 2: # computer start the evaluation
+            best = float('-inf')
+            best_moves = []
+            best_move = None
+            best_winning = []
+            for id, card in enumerate(player2):
+                if card:
+                    win_cards, win_scores = self.find_winning_cards(floor, card)
+#                    print(f"{['*' for _ in range(depth)]}  Computer card {card.rank} of {card.suit} with winning scores {win_scores} and floor {len(floor)}")
+
+                    # create new player and floor for the next iteration
+                    if player2_unplayed[id] > 0:
+                        new_player2_unplayed = player2_unplayed[:] # each iteration we need to reduce it
+                        new_player2_unplayed[id] -= 1
+                        new_player2 = player2[:]
+                        print(player2_unplayed[id], len(unplayed_cards))
+                        replace_id = random.randint(0,len(unplayed_cards)-1)
+                        new_card = copy.deepcopy(unplayed_cards[replace_id])
+                        new_card.prob = 1.0/len(unplayed_cards)
+                        new_player2[id] = new_card
+    #                    print(f"{['*' for _ in range(depth)]}  Computer new card {new_card.rank} of {new_card.suit} with prob {new_card.prob}")
+                        new_unplayed_cards = unplayed_cards[:]
+                        new_unplayed_cards.pop(replace_id)
+                    else:
+                        new_player2 = player2[:]
+                        new_player2[id] = None                        
+                        new_player2_unplayed = player2_unplayed[:]
+                        new_unplayed_cards = unplayed_cards[:]
+
+                    if len(win_cards)==0:
+                        new_floor = floor[:]
+                        new_floor.append(card)
+                        value = self.min_max(player1, player1_unplayed, new_player2, new_player2_unplayed, new_floor, new_unplayed_cards, player=1, depth=depth+1, max_depth=max_depth, score1=score1, score2=score2)
+                        if value > best:
+                            best = max(best, value)
+                            best_moves = [id]
+                            best_winning = [None]
+                        elif value == best:
+                            best_moves.append(id)
+                            best_winning.append(None)
+                    else:
+                        for cards, score in zip(win_cards, win_scores):
+                            new_floor = [x for x in floor if x not in cards]
+                            value = self.min_max(player1, player1_unplayed, new_player2, new_player2_unplayed, new_floor, new_unplayed_cards, player=1, depth=depth+1, max_depth=max_depth, score1=score1, score2=score2+score)
+                            if value > best:
+                                best = max(best, value)
+                                best_moves = [id]
+                                best_winning = [cards]
+                            elif value == best:
+                                best_moves.append(id)
+                                best_winning.append(cards)
+            if depth == 0:
+                print(f"Best moves for computer at depth {depth}: {best_moves}, {best}")
+                return best, best_moves, best_winning  # Return the best move for player 1 at depth 0
+            else:
+                return best
+    
+        elif player==1:
+            best = float('inf')
+            for id, card in enumerate(player1):
+                if card:
+                    win_cards, win_scores = self.find_winning_cards(floor, card)
+#                    print(f"{['*' for _ in range(depth)]} Player card {card.rank} of {card.suit} with winning scores {win_scores} and floor {len(floor)}")
+                    # create new player and floor for the next iteration
+                    if player1_unplayed[id] > 0:
+                        new_player1_unplayed = player1_unplayed[:]
+                        new_player1_unplayed[id] -= 1
+                        new_player1 = player1[:]
+                        print(player1_unplayed[id], len(unplayed_cards))
+                        replace_id = random.randint(0,len(unplayed_cards)-1)
+                        new_card = copy.deepcopy(unplayed_cards[replace_id])
+                        new_card.prob = 1.0/len(unplayed_cards)
+                        new_player1[id] = new_card
+#                        print(f"{['*' for _ in range(depth)]}  Player new card {new_card.rank} of {new_card.suit} with prob {new_card.prob}")
+                        new_unplayed_cards = unplayed_cards[:]
+                        new_unplayed_cards.pop(replace_id)
+                    else:
+                        new_player1 = player1[:]
+                        new_player1[id] = None
+                        new_player1_unplayed = player1_unplayed[:]
+                        new_unplayed_cards = unplayed_cards[:]
+
+                    if len(win_cards)==0:
+                        new_floor = floor[:]
+                        new_floor.append(card)
+                        value = self.min_max(new_player1, new_player1_unplayed, player2, player2_unplayed, new_floor, new_unplayed_cards, player=2, depth=depth+1, max_depth=max_depth, score1=score1, score2=score2)
+                        best = min(best, value)
+                    else:
+                        for cards, score in zip(win_cards, win_scores):
+                            new_floor = [x for x in floor if x not in cards]
+                            value = self.min_max(new_player1, new_player1_unplayed, player2, player2_unplayed, new_floor, new_unplayed_cards, player=2, depth=depth+1, max_depth=max_depth, score1=score1+score, score2=score2)
+                            best = min(best, value) 
+
+            return best
+
+    def find_winning_cards(self, floor, card):
+        win_cards = []
+        win_scores = []
+
+        if card.rank == 'jack':
+            combo_cards = [c for c in floor if c.value < 12]
+            win_cards.append(list(combo_cards) + [card])
+        elif card.rank == 'queen':
+            combo_cards = [c for c in floor if c.rank == 'queen']
+            win_cards = [[c, card] for c in combo_cards]
+        elif card.rank == 'king':
+            combo_cards = [c for c in floor if c.rank == 'king']
+            win_cards = [[c, card] for c in combo_cards]
+        else:
+            # Check all combinations of floor cards (any number of cards)
+            values = [c.value for c in floor]
+            for r in range(1, len(floor)+1):
+                for combo in itertools.combinations(zip(floor, values), r):
+                    combo_cards, combo_values = zip(*combo)
+                    if sum(combo_values) + card.value == 11:
+                        win_cards.append(list(combo_cards) + [card])
+
+        value_cards = [c for c in floor if c.value <= 10]
+        if card.rank == 'jack' and len(value_cards) == 0: #single jack is not a winning card
+            win_cards = []
+
+        if win_cards:
+            for cards in win_cards:
+                scores = sum(c.score for c in cards)
+                clubs = sum(0.2 for c in cards if c.suit == 'clubs')
+                win_scores.append((scores + clubs)*card.prob)
+
+        if card.rank != 'jack' and len(win_cards) == 1 and len(win_cards[0]) == len(floor) + 1: #SOOOR
+            print("SOOOR")
+            win_scores[0] += 10*card.prob # Add 10 points for a single winning card
+
+        return win_cards, win_scores
 
     def flip_card_player2(self, *args):
         """Callback to add card to floor after animation"""
@@ -268,8 +459,8 @@ class GameController:
     def start_new_game(self):
         print("Starting new game")
 
-        wining_score = 10
-        if self.game_board.player1_score >= wining_score or self.game_board.player2_score >= wining_score:
+        winning_score = 52
+        if self.game_board.player1_score >= winning_score or self.game_board.player2_score >= winning_score:
             print("Game over, resetting scores")
             app = App.get_running_app()
             app.end_game()

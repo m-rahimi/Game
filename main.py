@@ -2,19 +2,18 @@ from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.core.window import Window
 from kivy.clock import Clock
-from player import Player
-from floor import Floor
-from floor_widget import FloorWidget
-from player_widget import PlayerWidget
-from game_controller import GameController
-from backgroung_widget import Background, BackgroundImage
+from backgroung_widget import Background
 from difficulty import DifficultySelection
 from mat_widget import MatWidget
-from game_state import GameState
-from card_widget import CardWidget
-from deal_cards import deal_cards
 from show_scores import ShowScores, ShowSoor
-
+from player import Player
+from floor import Floor
+from game_state import GameState
+from deal_cards import deal_cards
+from game_controller import GameController
+from floor_widget import FloorWidget
+from player_widget import PlayerWidget
+import sys
 
 def print_hierarchy(widget, level=0):
     print("  " * level + f"{widget}")
@@ -34,16 +33,17 @@ class GameBoard(FloatLayout):
         self.mat2 = None
 
     def initialize_widgets(self):
-        self.background = BackgroundImage()
+        self.background = Background()
+        self.add_widget(self.background)
         self.difficulty_selection = DifficultySelection(callback=self.initialize_game)
         self.background.add_widget(self.difficulty_selection.layout)
-        self.add_widget(self.background)
 
     def initialize_game(self):
-        print(f"Selected difficulty: {self.difficulty_selection.difficulty}")
+        print(f"Selected difficulty: {self.difficulty_selection.difficulty}, {self.difficulty_selection.max_depth}")
         print(f"Player starts: {self.difficulty_selection.player_start}")
         self.background.remove_widget(self.difficulty_selection.layout)
-        self.background.set_green_background()
+        self.background.remove_image()
+
         self.mat1 = MatWidget(name='Mat1')
         self.mat2 = MatWidget(name='Mat2')
         self.background.add_widget(self.mat1)
@@ -55,11 +55,11 @@ class GameBoard(FloatLayout):
         self.show_soor = ShowSoor(0, 0)
         self.background.add_widget(self.show_soor)
 
-#        self.initialize_game_board()
         self.deal_cards = deal_cards(self.controller.game_state.players[0], self.controller.game_state.players[1], self.controller.game_state.floor, self.initialize_game_board)
         self.background.add_widget(self.deal_cards)
 
     def initialize_game_board(self):
+        print("Initializing game board...")
         self.background.remove_widget(self.deal_cards)
 
         self.player1_widget = PlayerWidget(self.controller.game_state.players[0], 'Player1', self.controller)
@@ -75,6 +75,7 @@ class GameBoard(FloatLayout):
             self.controller.computer_move()
         else:
             print("Player starts")
+
 
 class CardGameApp(App):
     def initialize_game_logic(self, **kwargs):
@@ -98,8 +99,6 @@ class CardGameApp(App):
 
         self.game_board.initialize_widgets()
 
-        # print_hierarchy(game_board)
-
         return self.game_board
     
     def end_game(self):
@@ -108,4 +107,5 @@ class CardGameApp(App):
         self.stop()  # Stop the Kivy application
 
 if __name__ == '__main__':
+#    sys.stdout = open("output.log", "w")
     CardGameApp().run()
