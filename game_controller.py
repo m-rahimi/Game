@@ -78,6 +78,8 @@ class GameController:
             Clock.schedule_once(lambda dt: self.finish_game(), 1)
 
     def show_winning_cards(self, card_widget):
+        print("Showing winning cards")
+        print("Winning cards:", len(self.win_cards), self.win_n)
         cards = self.win_cards[self.win_n]
         for card in cards:
             for idx, child in enumerate(self.game_board.floor_widget.children):
@@ -204,7 +206,7 @@ class GameController:
                         player1.append(copy.deepcopy(card))
                     if id > 0:
                         unplayed_cards.append(copy.deepcopy(card))
-                        player1_unplayed[ig] = id
+#                        player1_unplayed[ig] += 1
             else:
                 player1.append(None)
                 player1_unplayed[ig] = 0
@@ -214,9 +216,9 @@ class GameController:
                 for id, card in enumerate(group):
                     if id==0:
                         player2.append(copy.deepcopy(card))
-                if id > 0:
-                    unplayed_cards.append(copy.deepcopy(card))
-                    player2_unplayed[ig] = id
+                    if id > 0:
+                        unplayed_cards.append(copy.deepcopy(card))
+#                        player2_unplayed[ig] += 1
             else:
                 player2.append(None)
                 player2_unplayed[ig] = 0
@@ -229,7 +231,7 @@ class GameController:
 
     def min_max(self, player1, player1_unplayed, player2, player2_unplayed, floor, unplayed_cards, player, depth, max_depth, score1, score2):
         if depth == max_depth or (player==1 and all(card is None for card in player1)) or (player==2 and all(card is None for card in player2)):
-#            print(f"Evaluating: score1={score1}, score2={score2}")
+            print(f"Evaluating: score1={score1}, score2={score2}")
             return score2 - score1  # The evaluation function
 
         if player == 2: # computer start the evaluation
@@ -240,19 +242,18 @@ class GameController:
             for id, card in enumerate(player2):
                 if card:
                     win_cards, win_scores = self.find_winning_cards(floor, card)
-#                    print(f"{['*' for _ in range(depth)]}  Computer card {card.rank} of {card.suit} with winning scores {win_scores} and floor {len(floor)}")
+                #    print(f"{['*' for _ in range(depth)]}  Computer card {card.rank} of {card.suit} with winning scores {win_scores} and floor {len(floor)}")
 
                     # create new player and floor for the next iteration
                     if player2_unplayed[id] > 0:
                         new_player2_unplayed = player2_unplayed[:] # each iteration we need to reduce it
                         new_player2_unplayed[id] -= 1
                         new_player2 = player2[:]
-                        print(player2_unplayed[id], len(unplayed_cards))
                         replace_id = random.randint(0,len(unplayed_cards)-1)
                         new_card = copy.deepcopy(unplayed_cards[replace_id])
                         new_card.prob = 1.0/len(unplayed_cards)
                         new_player2[id] = new_card
-    #                    print(f"{['*' for _ in range(depth)]}  Computer new card {new_card.rank} of {new_card.suit} with prob {new_card.prob}")
+                    #    print(f"{['*' for _ in range(depth)]}  Computer new card {new_card.rank} of {new_card.suit} with prob {new_card.prob}")
                         new_unplayed_cards = unplayed_cards[:]
                         new_unplayed_cards.pop(replace_id)
                     else:
@@ -294,18 +295,17 @@ class GameController:
             for id, card in enumerate(player1):
                 if card:
                     win_cards, win_scores = self.find_winning_cards(floor, card)
-#                    print(f"{['*' for _ in range(depth)]} Player card {card.rank} of {card.suit} with winning scores {win_scores} and floor {len(floor)}")
+                #    print(f"{['*' for _ in range(depth)]} Player card {card.rank} of {card.suit} with winning scores {win_scores} and floor {len(floor)}")
                     # create new player and floor for the next iteration
                     if player1_unplayed[id] > 0:
                         new_player1_unplayed = player1_unplayed[:]
                         new_player1_unplayed[id] -= 1
                         new_player1 = player1[:]
-                        print(player1_unplayed[id], len(unplayed_cards))
                         replace_id = random.randint(0,len(unplayed_cards)-1)
                         new_card = copy.deepcopy(unplayed_cards[replace_id])
                         new_card.prob = 1.0/len(unplayed_cards)
                         new_player1[id] = new_card
-#                        print(f"{['*' for _ in range(depth)]}  Player new card {new_card.rank} of {new_card.suit} with prob {new_card.prob}")
+                    #    print(f"{['*' for _ in range(depth)]}  Player new card {new_card.rank} of {new_card.suit} with prob {new_card.prob}")
                         new_unplayed_cards = unplayed_cards[:]
                         new_unplayed_cards.pop(replace_id)
                     else:

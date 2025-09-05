@@ -48,7 +48,7 @@ class DifficultySelection(FloatLayout):
             elif self.difficulty == "Medium":
                 self.max_depth = 4
             elif self.difficulty == "Hard":
-                self.max_depth = 6
+                self.max_depth = 8
                 
             for key in self.button_box.children:
                 if key != instance:
