@@ -3,6 +3,7 @@ from card_widget import CardWidget
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.app import App
+from kivy.uix.label import Label
 import copy
 import random
 import itertools
@@ -26,7 +27,8 @@ class GameController:
         """Handle card click event for Player 1"""
         print(self.click_flag, self.computer_flag)
         if self.click_flag and self.computer_flag is False:
-#            print("Player 1 clicked a card")
+            print("Player 1 clicked a card")
+            print(self.click_flag, self.computer_flag)
             self.click_flag = False  # Prevent further clicks until the current action is complete
             self.card_played1_group = copy.deepcopy(card_widget.group)
             self.game_board.player1_widget.remove_widget(card_widget)
@@ -41,9 +43,14 @@ class GameController:
             self.win_cards, self.win_scores, self.soor = self.game_state.floor.find_winning_cards(card)
             self.game_state.floor.add_card(card)  # Add card to the floor
             if self.soor:
-                self.player1_soor += 1
-                print(f"Player 1 SOOOR count: {self.player1_soor}")
-                self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
+                ncard = 0
+                for ig, group in enumerate(self.game_state.players[0].hand):
+                    if group:
+                        ncard += 1
+                if ncard > 0:
+                    self.player1_soor += 1
+                    print(f"Player 1 SOOOR count: {self.player1_soor}")
+                    self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
 
             # remove empty card widget from player1
             if len(self.game_state.players[0].hand[group])==0:
@@ -56,7 +63,6 @@ class GameController:
                 self.game_board.floor_widget.rearrange_card_widgets(card_widget, callback=self.show_winning_cards)
             else:
                 self.game_board.floor_widget.rearrange_card_widgets(card_widget, callback=self.flip_card_player1)
-                self.click_flag = True  # Allow further clicks after the action is complete
             
     def flip_card_player1(self, *args):
         group = self.card_played1_group
@@ -140,19 +146,20 @@ class GameController:
         best_move, best_winning = self.game_state.find_best_move(self.game_board.difficulty_selection.max_depth)
 
         self.computer_flag = True
-        # while True:
-        #     best_move = random.randint(0,5)
-        #     if len(self.game_state.players[1].hand[best_move]) > 0:
-        #         break
         self.card_played2_group = best_move
 
         card = self.game_state.players[1].hand[best_move].pop(0)  # Remove the card from player's hand
         self.win_cards, self.win_scores, self.soor = self.game_state.floor.find_winning_cards(card)
         self.game_state.floor.add_card(card)  # Add card to the floor
         if self.soor:
-            self.player2_soor += 1
-            print(f"Player 2 SOOOR count: {self.player2_soor}")
-            self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
+            ncard = 0
+            for ig, group in enumerate(self.game_state.players[1].hand):
+                if group:
+                    ncard += 1
+            if ncard > 0:
+                self.player2_soor += 1
+                print(f"Player 2 SOOOR count: {self.player2_soor}")
+                self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
 
         # select the winning card with best
         if len(self.win_cards) > 1:
@@ -257,8 +264,10 @@ class GameController:
         for child in self.game_board.mat2.children:
             if isinstance(child, CardWidget) and child.card.suit == "clubs":
                 count2 += 1
-        self.game_board.player1_score += count1
-        self.game_board.player2_score += count2
+        if count1 > 6:
+            self.game_board.player1_score += 7
+        else:
+            self.game_board.player2_score += 7
         self.game_board.show_scores.update_scores(self.game_board.player1_score, self.game_board.player2_score)
 
 
@@ -287,12 +296,34 @@ class GameController:
         print("Starting new game")
 
         winning_score = 52
-        if self.game_board.player1_score >= winning_score or self.game_board.player2_score >= winning_score:
-            print("Game over, resetting scores")
+        if self.game_board.player1_score >= winning_score:
+            text = f"You win the game"
+            self.selection_label = Label(text=text,
+                                    font_size=50,
+    #                                    size_hint=(0.5, 0.5),
+                                    pos_hint={'center_x': 0.5, 'center_y': 0.65},
+                                    color=(1, 1, 1, 1),
+                                    font_name="Roboto-Bold.ttf")
+            self.layout.add_widget(self.selection_label)
+
             app = App.get_running_app()
-            app.end_game()
-            self.game_board.player1_score = 0
-            self.game_board.player2_score = 0
+            Clock.schedule_once(lambda dt: app.end_game(), 1)
+            print("Game over, resetting scores")
+
+        elif self.game_board.player2_score >= winning_score:
+            text = f"Computer wins the game"
+            self.selection_label = Label(text=text,
+                                    font_size=50,
+    #                                    size_hint=(0.5, 0.5),
+                                    pos_hint={'center_x': 0.5, 'center_y': 0.65},
+                                    color=(1, 1, 1, 1),
+                                    font_name="Roboto-Bold.ttf")
+            self.layout.add_widget(self.selection_label)
+
+            app = App.get_running_app()
+            Clock.schedule_once(lambda dt: app.end_game(), 1)
+            print("Game over, resetting scores")
+
         else:
             self.win_cards, self.win_scores = [], []
             self.win_n = 0
@@ -304,6 +335,7 @@ class GameController:
             self.soor = False  # Track if a SOOOR has occurred
             self.player1_soor = 0
             self.player2_soor = 0
+            self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
 
 
             self.game_board.difficulty_selection.player_start = not self.game_board.difficulty_selection.player_start

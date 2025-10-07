@@ -55,7 +55,14 @@ class GameState:
             print(f"Best moves for computer at index {ig}: {best_moves}, {best}, {best_winning}")
 
         best_value = max(scores)
-        best_indices = scores.index(best_value)
+        indices = []
+        for i, value in enumerate(scores):
+            if value>best_value-0.1:
+                indices.append(i)
+        print(scores)
+        print(indices)
+        best_indices = indices[random.randint(0,len(indices)-1)] #scores.index(best_value)
+        print(best_indices)
         return results[best_indices]
 
 
