@@ -30,6 +30,7 @@ class GameState:
 
     def find_best_move(self, max_depth, top_scores=2):
         print("Computer is making a move...")
+        print(self.players[1].clubs)
         player1, player1_unplayed, player2, player2_unplayed, floor, unplayed_cards = self.create_tuple()
 
         zeros = [0 for _ in range(6)]
@@ -37,6 +38,11 @@ class GameState:
         for ig in range(6):
             if player2[ig] is not None:
                 best, best_moves, best_winning = self.min_max_index(ig, player1, zeros, player2, zeros, floor, unplayed_cards, player=2, depth=0, max_depth=max_depth, score1=0, score2=0)
+
+                if player2[ig][0] == 'jack' and len(best_winning) == 0:
+                    best = -20  # Slightly prefer not playing jack first
+                    print("Jack penalty applied")
+    
                 scores.append(best)
                 print(f"Best moves for computer at index {ig}: {best_moves}, {best}, {best_winning}")
             else:
@@ -51,7 +57,7 @@ class GameState:
         for ig in top_scores:
             best, best_moves, best_winning = self.min_max_index(ig, player1, player1_unplayed, player2, player2_unplayed, floor, unplayed_cards, player=2, depth=0, max_depth=4, score1=0, score2=0)
             scores.append(best)
-            results.append((best_moves[0], best_winning[0]))
+            results.append((best_moves[0], best_winning[0]))  #TBD
             print(f"Best moves for computer at index {ig}: {best_moves}, {best}, {best_winning}")
 
         best_value = max(scores)
@@ -73,6 +79,7 @@ class GameState:
         player1_unplayed = [0 for _ in range(6)]
         player2_unplayed = [0 for _ in range(6)]
         unplayed_cards = []
+        n_clubs = 0
 
         for ig, group in enumerate(self.players[0].hand):
             if group:
@@ -97,6 +104,7 @@ class GameState:
             else:
                 player2.append(None)
                 player2_unplayed[ig] = 0
+
 
         return player1, player1_unplayed, player2, player2_unplayed, floor, unplayed_cards
     
@@ -239,10 +247,19 @@ class GameState:
         else:
             win_cards = self.find_combinations(floor, card)
 
+        value_cards = [c for c in floor if c[3] < 12]
+        if card[0] == 'jack' and len(value_cards) == 0: #single jack is not a winning card
+            win_cards = []
+
+        if self.players[1].clubs < 7:
+            weight = self.players[1].clubs + 1
+        else:
+            weight = 0
+
         if win_cards:
             for cards in win_cards:
                 scores = sum(c[2] for c in cards)
-                clubs = sum(0.2 for c in cards if c[1] == 'clubs')
+                clubs = sum(0.2*weight for c in cards if c[1] == 'clubs')
                 win_scores.append((scores + clubs)*card[4])
 
         if card[0] != 'jack' and len(win_cards) == 1 and len(win_cards[0]) == len(floor) + 1: #SOOOR

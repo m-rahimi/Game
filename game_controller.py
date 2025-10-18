@@ -4,6 +4,9 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.app import App
 from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
 import copy
 import random
 import itertools
@@ -44,8 +47,8 @@ class GameController:
             self.game_state.floor.add_card(card)  # Add card to the floor
             if self.soor:
                 ncard = 0
-                for ig, group in enumerate(self.game_state.players[0].hand):
-                    if group:
+                for ig, gg in enumerate(self.game_state.players[0].hand):
+                    if gg:
                         ncard += 1
                 if ncard > 0:
                     self.player1_soor += 1
@@ -153,8 +156,8 @@ class GameController:
         self.game_state.floor.add_card(card)  # Add card to the floor
         if self.soor:
             ncard = 0
-            for ig, group in enumerate(self.game_state.players[1].hand):
-                if group:
+            for ig, gg in enumerate(self.game_state.players[1].hand):
+                if gg:
                     ncard += 1
             if ncard > 0:
                 self.player2_soor += 1
@@ -176,6 +179,12 @@ class GameController:
                     if len(match) == len(best_winning):
                         self.win_cards = [cards]
                         break
+        # count the clubs
+        if len(self.win_cards) > 0:
+            for c1 in self.win_cards[0]:
+                if c1.suit == 'clubs':
+                    self.game_state.players[1].clubs += 1
+            print(f"Computer clubs count: {self.game_state.players[1].clubs}")
 
         for idx, child in enumerate(self.game_board.player2_widget.children):
             if isinstance(child, CardWidget) and child.card == card:
@@ -294,36 +303,13 @@ class GameController:
 
     def start_new_game(self):
         print("Starting new game")
-
-        winning_score = 52
-        if self.game_board.player1_score >= winning_score:
-            text = f"You win the game"
-            self.selection_label = Label(text=text,
-                                    font_size=50,
-    #                                    size_hint=(0.5, 0.5),
-                                    pos_hint={'center_x': 0.5, 'center_y': 0.65},
-                                    color=(1, 1, 1, 1),
-                                    font_name="Roboto-Bold.ttf")
-            self.layout.add_widget(self.selection_label)
-
-            app = App.get_running_app()
-            Clock.schedule_once(lambda dt: app.end_game(), 1)
-            print("Game over, resetting scores")
-
-        elif self.game_board.player2_score >= winning_score:
-            text = f"Computer wins the game"
-            self.selection_label = Label(text=text,
-                                    font_size=50,
-    #                                    size_hint=(0.5, 0.5),
-                                    pos_hint={'center_x': 0.5, 'center_y': 0.65},
-                                    color=(1, 1, 1, 1),
-                                    font_name="Roboto-Bold.ttf")
-            self.layout.add_widget(self.selection_label)
-
-            app = App.get_running_app()
-            Clock.schedule_once(lambda dt: app.end_game(), 1)
-            print("Game over, resetting scores")
-
+        winning_score = 62
+        if self.game_board.player1_score >= winning_score and self.game_board.player1_score > self.game_board.player2_score:
+            text = "You win the game"
+            self.game_over(text)
+        elif self.game_board.player2_score >= winning_score and self.game_board.player2_score > self.game_board.player1_score:
+            text = "Computer wins the game"
+            self.game_over(text)
         else:
             self.win_cards, self.win_scores = [], []
             self.win_n = 0
@@ -333,15 +319,93 @@ class GameController:
             self.computer_flag = False
             self.last_winner = None  # Track the last winner
             self.soor = False  # Track if a SOOOR has occurred
+            self.game_state.players[0].clubs = 0
+            self.game_state.players[1].clubs = 0
             self.player1_soor = 0
             self.player2_soor = 0
             self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
-
 
             self.game_board.difficulty_selection.player_start = not self.game_board.difficulty_selection.player_start
 
             self.game_state.setup()
             self.game_board.initialize_game_board()    
+
+    def game_over(self, text):
+        print("Game over called")
+        if not hasattr(self, "overlay_layout"):
+            # Create an overlay once and attach it to the app root (or a known parent)
+            self.overlay_layout = FloatLayout()
+            App.get_running_app().root.add_widget(self.overlay_layout)
+
+        self.selection_label = Label(
+            text=text,
+            font_size=50,
+            pos_hint={'center_x': 0.5, 'center_y': 0.65},
+            color=(1, 1, 1, 1),
+            font_name="Roboto-Bold.ttf"
+        )
+        self.overlay_layout.add_widget(self.selection_label)
+
+        # Create button container
+        self.button_box = BoxLayout(
+            orientation='vertical',
+            spacing=10,
+            size_hint=(0.5, 0.35),  # Smaller centered window
+            pos_hint={'center_x': 0.5, 'center_y': 0.45 },
+            padding=20,
+        )
+        
+        # Add buttons
+        self.b1 = Button(text="New Game", background_color=(0.6, 0.8, 1, 1), font_size=40)
+        self.b1.bind(on_press=self.new_game_after_over)
+
+        self.b2 = Button(text="Exit", background_color=(1, 0.3, 0.3, 1), font_size=40)
+        self.b2.bind(on_press=self.new_game_after_over)
+
+        self.button_box.add_widget(self.b1)
+        self.button_box.add_widget(self.b2)
+        self.overlay_layout.add_widget(self.button_box)
+
+        return
+
+    def new_game_after_over(self, instance):
+        print("New game after game over")
+        if instance.text == "Exit":
+            App.get_running_app().end_game()
+        else:
+            if hasattr(self, "overlay_layout"):
+                App.get_running_app().root.remove_widget(self.overlay_layout)
+                del self.overlay_layout
+
+            self.win_cards, self.win_scores = [], []
+            self.win_n = 0
+            self.click_flag = True  # Prevent multiple clicks
+            self.card_played1_group = None
+            self.card_played2_group = None
+            self.computer_flag = False
+            self.last_winner = None  # Track the last winner
+            self.soor = False  # Track if a SOOOR has occurred
+            self.game_board.player1_score = 0
+            self.game_board.player2_score = 0
+            self.player1_soor = 0
+            self.player2_soor = 0
+            self.game_state.players[0].clubs = 0
+            self.game_state.players[1].clubs = 0
+
+            self.game_board.show_scores.update_scores(self.game_board.player1_score, self.game_board.player2_score)
+            self.game_board.show_soor.update_soors(self.player1_soor, self.player2_soor)
+
+            self.game_board.difficulty_selection.player_start = not self.game_board.difficulty_selection.player_start
+
+            self.game_state.setup()
+            self.game_board.initialize_game_board()
+        
+
+
+
+#        Clock.schedule_once(lambda dt: App.get_running_app().end_game(), 10)
+        return
+        
 
 
 def print_hierarchy(widget, level=0):

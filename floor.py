@@ -35,7 +35,7 @@ class Floor:
                     if sum(combo_values) + card.value == 11:
                         win_cards.append(list(combo_cards) + [card])
 
-        value_cards = [c for c in self.hand if c.value <= 10]
+        value_cards = [c for c in self.hand if c.value < 12]
         if card.rank == 'jack' and len(value_cards) == 0: #single jack is not a winning card
             win_cards = []
 

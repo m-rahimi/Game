@@ -70,4 +70,4 @@ class DifficultySelection(FloatLayout):
                                     color=(1, 1, 1, 1),
                                     font_name="Roboto-Bold.ttf")
             self.layout.add_widget(self.selection_label)
-            Clock.schedule_once(lambda dt: self.callback(), 1)
+            Clock.schedule_once(lambda dt: self.callback(), 2)
