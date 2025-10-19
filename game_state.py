@@ -39,7 +39,7 @@ class GameState:
             if player2[ig] is not None:
                 best, best_moves, best_winning = self.min_max_index(ig, player1, zeros, player2, zeros, floor, unplayed_cards, player=2, depth=0, max_depth=max_depth, score1=0, score2=0)
 
-                if player2[ig][0] == 'jack' and len(best_winning) == 0:
+                if player2[ig][0] == 'jack' and best_winning[0] is None:
                     best = -20  # Slightly prefer not playing jack first
                     print("Jack penalty applied")
     
