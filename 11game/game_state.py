@@ -56,6 +56,11 @@ class GameState:
         results = []
         for ig in top_scores:
             best, best_moves, best_winning = self.min_max_index(ig, player1, player1_unplayed, player2, player2_unplayed, floor, unplayed_cards, player=2, depth=0, max_depth=4, score1=0, score2=0)
+
+            if player2[ig][0] == 'jack' and best_winning[0] is None:
+                best = -20  # Slightly prefer not playing jack first
+                print("Jack penalty applied")
+                
             scores.append(best)
             results.append((best_moves[0], best_winning[0]))  #TBD
             print(f"Best moves for computer at index {ig}: {best_moves}, {best}, {best_winning}")
