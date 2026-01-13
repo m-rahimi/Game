@@ -1,0 +1,19 @@
+export PATH=~/.local/bin/:$PATH
+
+buildozer init
+
+	•	Edited buildozer.spec:
+	•	Changed package.domain from org.test to your custom domain like com.example.myapp.
+	•	Ensured requirements included at least kivy.
+	requirements = python3,kivy,pillow
+	source.include_exts = py,png,jpg,kv,atlas
+	source.include_dirs = png
+
+buildozer android clean
+buildozer -v android debug deploy
+buildozer -v android debug
+
+buildozer android release aab
+buildozer android debug
+
+buildozer -v android debug
