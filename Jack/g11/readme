@@ -1,0 +1,9 @@
+Android build files moved to the Jack5 project root.
+
+From the Jack5 folder:
+
+  pip install --user buildozer cython
+  export PATH="$HOME/.local/bin:$PATH"
+  ./build_android.sh
+
+See build_android.sh for release build and output paths.

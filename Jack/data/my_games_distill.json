@@ -1,0 +1,1046 @@
+{
+ "games": [
+  {
+   "meta": {
+    "ai": "policy",
+    "human_player": 0,
+    "simulations": 400,
+    "checkpoint": null,
+    "policy_checkpoint": "checkpoints/policy_distill800_l3.pt",
+    "value_checkpoint": null,
+    "belief_checkpoint": null,
+    "seed": null
+   },
+   "hands": [
+    [
+     "8C",
+     "JC",
+     "2D",
+     "5D",
+     "8D",
+     "AD",
+     "3H",
+     "5H",
+     "10H",
+     "QH",
+     "KH",
+     "3S",
+     "AS"
+    ],
+    [
+     "2C",
+     "3C",
+     "6C",
+     "4D",
+     "9D",
+     "2H",
+     "7H",
+     "8H",
+     "AH",
+     "2S",
+     "7S",
+     "JS",
+     "KS"
+    ],
+    [
+     "4C",
+     "7C",
+     "9C",
+     "10C",
+     "QC",
+     "KC",
+     "3D",
+     "7D",
+     "4H",
+     "5S",
+     "9S",
+     "10S",
+     "QS"
+    ],
+    [
+     "5C",
+     "AC",
+     "6D",
+     "10D",
+     "JD",
+     "QD",
+     "KD",
+     "6H",
+     "9H",
+     "JH",
+     "4S",
+     "6S",
+     "8S"
+    ]
+   ],
+   "leader": 0,
+   "moves": [
+    {
+     "seat": 0,
+     "card": "AD",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "4D",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "3D",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "JD",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "8D",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "9D",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "7D",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "10D",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "8S",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "3S",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "KS",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "5S",
+     "human": false
+    },
+    {
+     "seat": 1,
+     "card": "7H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "4H",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "9H",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "KH",
+     "human": true
+    },
+    {
+     "seat": 0,
+     "card": "5D",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "JS",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "4C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "6D",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "5C",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "8C",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "2C",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "7C",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "AS",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "7S",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "9S",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "4S",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "2D",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "2S",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "10S",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "QD",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "6S",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "10H",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "2H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "QS",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "9C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "AC",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "JC",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "3C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "KD",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "QH",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "6C",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "10C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "6H",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "5H",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "8H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "QC",
+     "human": false
+    },
+    {
+     "seat": 1,
+     "card": "AH",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "KC",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "JH",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "3H",
+     "human": true
+    }
+   ],
+   "flags": [],
+   "scores": [
+    4,
+    -1
+   ]
+  },
+  {
+   "meta": {
+    "ai": "policy",
+    "human_player": 0,
+    "simulations": 400,
+    "checkpoint": null,
+    "policy_checkpoint": "checkpoints/policy_distill800_l3.pt",
+    "value_checkpoint": null,
+    "belief_checkpoint": null,
+    "seed": null,
+    "match_target": 21,
+    "round": 1,
+    "tiebreak": false,
+    "match_totals_before": [
+     0,
+     0
+    ],
+    "leader": 2
+   },
+   "hands": [
+    [
+     "4C",
+     "6C",
+     "8C",
+     "2D",
+     "8D",
+     "JD",
+     "KD",
+     "10H",
+     "JH",
+     "QH",
+     "KH",
+     "7S",
+     "9S"
+    ],
+    [
+     "3C",
+     "9C",
+     "JC",
+     "AC",
+     "5D",
+     "2H",
+     "6H",
+     "7H",
+     "8H",
+     "4S",
+     "8S",
+     "10S",
+     "KS"
+    ],
+    [
+     "2C",
+     "5C",
+     "7C",
+     "10C",
+     "6D",
+     "9D",
+     "10D",
+     "AH",
+     "3S",
+     "5S",
+     "6S",
+     "QS",
+     "AS"
+    ],
+    [
+     "QC",
+     "KC",
+     "3D",
+     "4D",
+     "7D",
+     "QD",
+     "AD",
+     "3H",
+     "4H",
+     "5H",
+     "9H",
+     "2S",
+     "JS"
+    ]
+   ],
+   "leader": 2,
+   "moves": [
+    {
+     "seat": 2,
+     "card": "10C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "QC",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "8C",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "3C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "9H",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "10H",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "2H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "AH",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "2C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "KC",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "6C",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "9C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "JS",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "9S",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "4S",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "3S",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "AD",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "JD",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "5D",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "6D",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "QD",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "KD",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "JC",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "9D",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "4C",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "AC",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "5C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "2S",
+     "human": false
+    },
+    {
+     "seat": 1,
+     "card": "6H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "5S",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "3H",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "KH",
+     "human": true
+    },
+    {
+     "seat": 0,
+     "card": "7S",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "KS",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "AS",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "3D",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "QS",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "4D",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "8D",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "8S",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "6S",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "4H",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "JH",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "10S",
+     "human": false
+    },
+    {
+     "seat": 1,
+     "card": "7H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "7C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "5H",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "QH",
+     "human": true
+    },
+    {
+     "seat": 0,
+     "card": "2D",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "8H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "10D",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "7D",
+     "human": false
+    }
+   ],
+   "flags": [],
+   "scores": [
+    3,
+    0
+   ]
+  },
+  {
+   "meta": {
+    "ai": "policy",
+    "human_player": 0,
+    "simulations": 400,
+    "checkpoint": null,
+    "policy_checkpoint": "checkpoints/policy_distill800_l3.pt",
+    "value_checkpoint": null,
+    "belief_checkpoint": null,
+    "seed": null,
+    "match_target": 21,
+    "round": 2,
+    "tiebreak": false,
+    "match_totals_before": [
+     3,
+     0
+    ],
+    "leader": 3
+   },
+   "hands": [
+    [
+     "4C",
+     "5C",
+     "7C",
+     "8C",
+     "AC",
+     "10D",
+     "4H",
+     "AH",
+     "6S",
+     "7S",
+     "9S",
+     "JS",
+     "AS"
+    ],
+    [
+     "2C",
+     "9C",
+     "10C",
+     "JC",
+     "2D",
+     "4D",
+     "8D",
+     "9D",
+     "AD",
+     "6H",
+     "8H",
+     "5S",
+     "QS"
+    ],
+    [
+     "6C",
+     "KC",
+     "5D",
+     "JD",
+     "KD",
+     "3H",
+     "5H",
+     "10H",
+     "QH",
+     "KH",
+     "2S",
+     "4S",
+     "KS"
+    ],
+    [
+     "3C",
+     "QC",
+     "3D",
+     "6D",
+     "7D",
+     "QD",
+     "2H",
+     "7H",
+     "9H",
+     "JH",
+     "3S",
+     "8S",
+     "10S"
+    ]
+   ],
+   "leader": 3,
+   "moves": [
+    {
+     "seat": 3,
+     "card": "10S",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "AS",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "5S",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "KS",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "10D",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "AD",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "JD",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "3D",
+     "human": false
+    },
+    {
+     "seat": 1,
+     "card": "8D",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "KD",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "6D",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "AH",
+     "human": true
+    },
+    {
+     "seat": 2,
+     "card": "10H",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "7H",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "4H",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "6H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "5D",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "7D",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "JS",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "2D",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "8S",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "6S",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "QS",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "2S",
+     "human": false
+    },
+    {
+     "seat": 1,
+     "card": "8H",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "3H",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "9H",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "9S",
+     "human": true
+    },
+    {
+     "seat": 3,
+     "card": "3C",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "8C",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "9C",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "KC",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "6C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "QC",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "7C",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "2C",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "3S",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "7S",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "JC",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "4S",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "4C",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "10C",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "QH",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "2H",
+     "human": false
+    },
+    {
+     "seat": 1,
+     "card": "4D",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "KH",
+     "human": false
+    },
+    {
+     "seat": 3,
+     "card": "QD",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "AC",
+     "human": true
+    },
+    {
+     "seat": 3,
+     "card": "JH",
+     "human": false
+    },
+    {
+     "seat": 0,
+     "card": "5C",
+     "human": true
+    },
+    {
+     "seat": 1,
+     "card": "9D",
+     "human": false
+    },
+    {
+     "seat": 2,
+     "card": "5H",
+     "human": false
+    }
+   ],
+   "flags": [],
+   "scores": [
+    1,
+    2
+   ]
+  }
+ ]
+}
