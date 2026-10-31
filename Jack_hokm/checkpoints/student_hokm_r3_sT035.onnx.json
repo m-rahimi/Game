@@ -1,0 +1,7 @@
+{
+  "feature_dim": 580,
+  "hidden_dim": 512,
+  "num_layers": 3,
+  "source_checkpoint": "checkpoints/student_hokm_r3_sT035.pt",
+  "embedded_weights": true
+}
